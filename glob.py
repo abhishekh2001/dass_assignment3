@@ -28,6 +28,8 @@ prev_powerup_timestamp = time.time()
 time_attack = time.time()
 bricks_fall = False
 
+gravity_timestamp = 0
+
 
 def clear_screen():
     if paddle:
@@ -52,6 +54,7 @@ def init():
     global active_powerups
     global time_attack
     global bricks_fall
+    global gravity_timestamp
 
     clear_screen()
     balls.remove_all()
@@ -93,6 +96,8 @@ def init():
     time_attack = time.time()
     bricks_fall = False
 
+    gravity_timestamp = time.time()
+
 
 def start_new_life():
     global balls
@@ -117,18 +122,19 @@ def start_new_life():
 def spawn_powerup(x, y):
     if random.random() <= config.prob_powerup:
         p_type = random.choice([1, 2, 3, 4, 5, 6])
+        xvel, yvel = 1, -1
         if p_type == 1:
-            powerups.append(ExpandPaddle(x, y))
+            powerups.append(ExpandPaddle(x, y, xvel, yvel))
         elif p_type == 2:
-            powerups.append(ShrinkPaddle(x, y))
+            powerups.append(ShrinkPaddle(x, y, xvel, yvel))
         elif p_type == 3:
-            powerups.append(BallMultiplier(x, y))
+            powerups.append(BallMultiplier(x, y, xvel, yvel))
         elif p_type == 4:
-            powerups.append(FastBall(x, y))
+            powerups.append(FastBall(x, y, xvel, yvel))
         elif p_type == 5:
-            powerups.append(ThruBall(x, y))
+            powerups.append(ThruBall(x, y, xvel, yvel))
         elif p_type == 6:
-            powerups.append(PaddleGrab(x, y))
+            powerups.append(PaddleGrab(x, y, xvel, yvel))
 
 
 def deactivate_powerups():
@@ -180,6 +186,7 @@ def move_powerups(ppt):
     :return: value of powerup timestamp after current iteration
     """
     global powerups
+    global gravity_timestamp
     flag = False
     for powerup in powerups:
         if time.time() - ppt >= powerup.get_speed():
@@ -187,10 +194,21 @@ def move_powerups(ppt):
             if powerup.is_caught_by_paddle(paddle):  # Check if powerup is caught
                 to_activate_powerups.append(powerup)  # temporarily store powerups to activate
                 powerup.set_status(config.powerup_status['ACTIVE'])  # Update status of caught powerup
-            if powerup.go_down(board.matrix):
-                powerup.set_status(config.powerup_status['MISSED'])  # User has missed the powerup
+            powerup.move_relative(board.matrix, powerup.get_xvel(), powerup.get_yvel())
+            board.matrix[0][0] = str(powerup.get_yvel())
+            # if powerup.go_down(board.matrix):
+            #     powerup.set_status(config.powerup_status['MISSED'])  # User has missed the powerup
     if flag:
         ppt = time.time()
+
+    for powerup in powerups:
+        if time.time() - powerup.get_grav_timestamp() >= 5:
+            # change y as well
+            powerup.set_grav_timestamp(time.time())
+            if powerup.get_xvel() > 0:
+                powerup.set_xvel((max(0, powerup.get_xvel() - 1)))
+            else:
+                powerup.set_xvel(min(0, powerup.get_xvel() - 1))
 
     powerups = list(filter(lambda p: p.get_status() == config.powerup_status['SPAWNED'], powerups))
 

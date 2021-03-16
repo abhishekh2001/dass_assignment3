@@ -11,6 +11,7 @@ glob.init()
 start_time = time.time()
 max_points = 0
 
+glob.spawn_powerup(10, 15)
 while True and glob.player.get_lives():
     # Move paddle
     user_action.make_move()
