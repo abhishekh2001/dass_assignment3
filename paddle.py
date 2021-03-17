@@ -8,6 +8,17 @@ class Paddle(Component):
         super().__init__(x, config.paddle_row_restriction, representation)
         self._ball = ball
         self._grab = False
+        self._is_shooting = False
+
+    def set_shooting(self, val):
+        self._is_shooting = val
+        if val:
+            self._representation = ['^' + '▄'*(self._width-2) + '^']
+        else:
+            self._representation = ['▄' * self._width]
+
+    def get_shooting(self):
+        return self._is_shooting
 
     def set_grab(self, value):
         self._grab = value
@@ -59,6 +70,8 @@ class Paddle(Component):
         """
         width = max(3, min(7, width))
         representation = ['▄' * width]
+        if self._is_shooting:
+            representation = ['^' + '▄'*(width-2) + '^']
         self.set_representation(representation)
 
     def move_relative(self, board, x_diff=0):

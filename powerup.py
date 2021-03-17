@@ -35,6 +35,13 @@ class PowerUp(Component):
         self._xvel = xvel
         self._yvel = yvel
         self._gravtstmp = time.time()
+        self._last_moved_timestamp = time.time()
+
+    def get_last_moved_timestamp(self):
+        return self._last_moved_timestamp
+
+    def set_last_moved_timestamp(self, val):
+        self._last_moved_timestamp = val
 
     def set_grav_timestamp(self, val):
         self._gravtstmp = val
@@ -217,3 +224,22 @@ class PaddleGrab(PowerUp):  # 6
 
     def deactivate(self):
         glob.paddle.set_grab(False)
+
+
+class ShootingPaddle(PowerUp):  # 7
+    def __init__(self, x, y, xvel, yvel):
+        super().__init__(x, y, ['L'], 7, xvel, yvel)
+        self._interval_timestamp = time.time()
+
+    def get_interval_timestamp(self):
+        return self._interval_timestamp
+
+    def set_interval_timestamp(self, val):
+        self._interval_timestamp = val
+
+    def activate(self):
+        glob.paddle.set_shooting(True)
+        return True
+
+    def deactivate(self):
+        glob.paddle.set_shooting(False)
