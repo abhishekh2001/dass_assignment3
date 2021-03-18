@@ -50,14 +50,14 @@ while True and glob.player.get_lives():
         print('Time left:', int(config.shooting_duration - (time.time() - glob.paddle.get_shooting_start())))
     glob.board.render()
 
-    if max(list(map(lambda x: x.get_y(), glob.bricks))) >= config.board_height - 2:
-        break
-
     if not len(list(filter(lambda b: b.get_brick_type() != -1, glob.bricks))):
         if glob.level == 3:
             break
         glob.level += 1
         glob.init()
+
+    if len(glob.bricks) and max(list(map(lambda x: x.get_y(), glob.bricks))) >= config.board_height - 2:
+        break
 
 os.system('clear')
 print('Game over')

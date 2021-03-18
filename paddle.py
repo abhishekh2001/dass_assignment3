@@ -104,3 +104,4 @@ class Paddle(Component):
         if time.time() - self._shooting_timestamp >= config.shooting_interval:
             self._shooting_timestamp = time.time()
             glob.lasers.add_laser(self.get_x(), self.get_y()-1)
+            glob.lasers.add_laser(self.get_x()+self.get_width(), self.get_y()-1)
