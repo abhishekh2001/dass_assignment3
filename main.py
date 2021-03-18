@@ -1,6 +1,6 @@
 from modules import *
 import colorama
-from glob import board, paddle, prev_ball_timestamp, prev_powerup_timestamp, move_powerups, \
+from glob import board, prev_powerup_timestamp, move_powerups, \
     deactivate_powerups
 import glob
 import user_action
@@ -21,7 +21,9 @@ while True and glob.player.get_lives():
     # Perform motion and functionalities
     glob.trigger_time_attack()
     glob.balls.move_all()
+    glob.lasers.move_all()
     prev_powerup_timestamp = move_powerups(prev_powerup_timestamp)
+    glob.paddle.shoot()
     deactivate_powerups()
 
     for brick in glob.bricks:
@@ -30,6 +32,7 @@ while True and glob.player.get_lives():
 
     # Render screen elements
     glob.balls.render_all(board.matrix)
+    glob.lasers.render_all(board.matrix)
     for brick in glob.bricks:
         brick.render(board.matrix)
     for powerup in glob.powerups:

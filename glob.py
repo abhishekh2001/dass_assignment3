@@ -8,6 +8,7 @@ from powerup import PowerUp, ExpandPaddle, ShrinkPaddle, PaddleGrab, type_repr_m
 import config
 from player import Player
 from balls import Balls
+from laser import Lasers
 from explodingBricks import ExplodingBrick
 
 
@@ -15,8 +16,9 @@ player = Player()
 max_points = 0
 
 board = Board()
-paddle = Paddle(8)
+paddle = None
 balls = Balls()
+lasers = Lasers()
 powerups = []
 to_activate_powerups = []
 active_powerups = []
@@ -59,6 +61,7 @@ def init():
 
     clear_screen()
     balls.remove_all()
+    lasers.remove_all()
 
     paddle = Paddle(8, width=5)
     balls.add_ball(paddle.get_x() + random.randint(0, paddle.get_width() - 1), paddle.get_y() - 1, 0, 0, speed=0.2,

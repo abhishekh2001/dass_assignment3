@@ -96,3 +96,31 @@ class Ball(Component):
         # self._xvel += x_vel_diff
         self.set_xvel(self.get_xvel() + x_vel_diff)
         self._yvel += y_vel_diff
+
+
+class Laser(Ball):
+    def __init__(self, x, y, xvel, yvel, representation=[['|']], free=0, speed=1):
+        super().__init__(x, y, xvel, yvel, representation, True)
+
+    def move_relative(self, board, x_diff=0, y_diff=0):
+        """
+        Sets new position relative to current position of paddle
+        :param board: matrix storing the board
+        :param x_diff: delta by which the position of ball changes in the x-axis
+        :param y_diff: delta by which the position of ball changes in the y-axis
+        """
+        self.clear(board)
+
+        new_pos_x = self._x + x_diff
+        if new_pos_x >= 0 and new_pos_x + self._width <= config.board_width:
+            self.set_x(new_pos_x)
+
+        if new_pos_x <= 0 or new_pos_x >= config.board_width:
+            self.set_xvel(-self._xvel)
+
+        new_pos_y = self._y + y_diff
+        if new_pos_y >= 0 and new_pos_y + self._height <= config.board_height:
+            self.set_y(new_pos_y)
+
+        if new_pos_y == 0:
+            self.set_yvel(-self._yvel)

@@ -1,5 +1,7 @@
 from component import Component
 import config
+import time
+import glob
 
 
 class Paddle(Component):
@@ -9,10 +11,13 @@ class Paddle(Component):
         self._ball = ball
         self._grab = False
         self._is_shooting = False
+        self._shooting_timestamp = 0.0
 
     def set_shooting(self, val):
         self._is_shooting = val
+        self._shooting_timestamp = time.time()
         if val:
+            self.shoot()
             self._representation = ['^' + '▄'*(self._width-2) + '^']
         else:
             self._representation = ['▄' * self._width]
@@ -87,3 +92,10 @@ class Paddle(Component):
             if self._ball:
                 self._ball.move_relative(board, x_diff)
 
+    def shoot(self):
+        if not self._is_shooting:
+            return
+
+        if time.time() - self._shooting_timestamp >= config.shooting_interval:
+            self._shooting_timestamp = time.time()
+            glob.lasers.add_laser(self.get_x(), self.get_y()-1)
