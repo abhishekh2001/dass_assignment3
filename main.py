@@ -24,6 +24,7 @@ while True and glob.player.get_lives():
     glob.lasers.move_all()
     prev_powerup_timestamp = move_powerups(prev_powerup_timestamp)
     glob.paddle.shoot()
+    glob.boss.move_with_paddle()
     deactivate_powerups()
 
     for brick in glob.bricks:
@@ -37,6 +38,17 @@ while True and glob.player.get_lives():
         brick.render(board.matrix)
     for powerup in glob.powerups:
         powerup.render(board.matrix)
+    if glob.boss:
+        glob.boss.render(board.matrix)
+        glob.boss.drop_bomb()
+    if glob.bomb:
+        glob.bomb.clear(board.matrix)
+        glob.bomb.render(board.matrix)
+        to_disappear = glob.bomb.move_down()
+        if to_disappear:
+            glob.bomb.clear(board.matrix)
+            glob.bomb = None
+
     glob.paddle.render(board.matrix)
 
     glob.max_points = max(glob.player.get_points(), glob.max_points)

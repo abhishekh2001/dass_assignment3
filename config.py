@@ -8,3 +8,5 @@ ball_speed_interval = 0.06
 time_attack_limit = [-1, 5, 10, 100]
 shooting_interval = 3
 shooting_duration = 10
+bomb_interval = 15
+bomb_speed = 0.5

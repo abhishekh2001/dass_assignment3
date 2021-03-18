@@ -10,6 +10,8 @@ from player import Player
 from balls import Balls
 from laser import Lasers
 from explodingBricks import ExplodingBrick
+from boss import Boss
+from bomb import Bomb
 
 
 player = Player()
@@ -25,6 +27,12 @@ active_powerups = []
 bricks = []
 level = 1
 
+level = 3
+
+
+boss = None
+bomb = None
+
 prev_ball_timestamp = time.time()
 prev_powerup_timestamp = time.time()
 time_attack = time.time()
@@ -35,6 +43,8 @@ accel_y = 1
 
 
 def clear_screen():
+    global bomb
+    global boss
     if paddle:
         paddle.clear(board.matrix)
     for ball in balls.get_balls():
@@ -45,7 +55,12 @@ def clear_screen():
         laser.clear(board.matrix)
     for brick in bricks:
         brick.clear(board.matrix)
-
+    if bomb:
+        bomb.clear(board.matrix)
+        bomb = None
+    if boss:
+        boss.clear(board.matrix)
+        boss = None
 
 def init():
     global paddle
@@ -60,6 +75,7 @@ def init():
     global time_attack
     global bricks_fall
     global gravity_timestamp
+    global boss
 
     clear_screen()
     balls.remove_all()
@@ -96,6 +112,10 @@ def init():
         bricks.append(ExplodingBrick(36, 13))
         bricks.append(ExplodingBrick(56, 13))
         bricks.append(Brick(45, 13, 2, ['BBBB']))
+
+    if level == 3:
+        boss = Boss(paddle.get_x(), 1   )
+        bricks.append(Brick(45, 13, 3, ['BBBB']))
 
     prev_ball_timestamp = time.time()  # Improve
     prev_powerup_timestamp = time.time()
@@ -144,6 +164,11 @@ def spawn_powerup(x, y):
             powerups.append(PaddleGrab(x, y, xvel, yvel))
         elif p_type == 7:
             powerups.append((ShootingPaddle(x, y, xvel, yvel)))
+
+
+def spawn_bomb(x, y):
+    global bomb
+    bomb = Bomb(x, y)
 
 
 def deactivate_powerups():

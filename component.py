@@ -3,7 +3,7 @@ class Component:
     def __init__(self, x, y, representation):
         self._x = x
         self._y = y
-        self._width = len(representation[0])
+        self._width = max([len(row) for row in representation])
         self._height = len(representation)
         self._representation = representation
 
@@ -33,7 +33,7 @@ class Component:
         self._y = y
 
     def set_representation(self, repr):
-        self._width = len(repr[0])
+        self._width = max([len(row) for row in repr])  # TODO: check changing paddle width
         self._height = len(repr)
         self._representation = repr
 
