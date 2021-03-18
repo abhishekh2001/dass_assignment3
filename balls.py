@@ -99,6 +99,7 @@ class Balls:
                 glob.player.lose_life()
                 glob.player.set_points(0)
                 glob.init()
+        # TODO: use handle_ball_ufo_collision
         if flag:
             pbt = time.time()
         glob.prev_ball_timestamp = pbt
