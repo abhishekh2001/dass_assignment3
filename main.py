@@ -44,6 +44,10 @@ while True and glob.player.get_lives():
     print('Life: ', glob.player.get_lives())
     print('Score: ', glob.player.get_points())
     print('Time: ', str(int(time.time() - start_time)), 's')
+    if not glob.paddle.get_shooting():
+        print()
+    else:
+        print('Time left:', int(config.shooting_duration - (time.time() - glob.paddle.get_shooting_start())))
     glob.board.render()
 
     if max(list(map(lambda x: x.get_y(), glob.bricks))) >= config.board_height - 2:

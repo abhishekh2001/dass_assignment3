@@ -11,7 +11,11 @@ class Paddle(Component):
         self._ball = ball
         self._grab = False
         self._is_shooting = False
+        self._shooting_start = 0.0
         self._shooting_timestamp = 0.0
+
+    def get_shooting_start(self):
+        return self._shooting_start
 
     def set_shooting(self, val):
         self._is_shooting = val
@@ -19,6 +23,7 @@ class Paddle(Component):
         if val:
             self.shoot()
             self._representation = ['^' + '▄'*(self._width-2) + '^']
+            self._shooting_start = time.time()
         else:
             self._representation = ['▄' * self._width]
 

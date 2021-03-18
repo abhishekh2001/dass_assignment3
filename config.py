@@ -7,3 +7,4 @@ powerup_status = {'MISSED': -1, 'SPAWNED': 0, 'ACTIVE': 1, 'DISABLED': 2}
 ball_speed_interval = 0.06
 time_attack_limit = [-1, 5, 10, 100]
 shooting_interval = 3
+shooting_duration = 10

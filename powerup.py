@@ -228,7 +228,7 @@ class PaddleGrab(PowerUp):  # 6
 
 class ShootingPaddle(PowerUp):  # 7
     def __init__(self, x, y, xvel, yvel):
-        super().__init__(x, y, ['L'], 7, xvel, yvel)
+        super().__init__(x, y, ['L'], 7, xvel, yvel, config.shooting_duration)
         self._interval_timestamp = time.time()
 
     def get_interval_timestamp(self):

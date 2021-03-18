@@ -41,6 +41,8 @@ def clear_screen():
         ball.clear(board.matrix)
     for powerup in powerups:
         powerup.clear(board.matrix)
+    for laser in lasers.get_lasers():
+        laser.clear(board.matrix)
     for brick in bricks:
         brick.clear(board.matrix)
 
