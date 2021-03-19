@@ -2,7 +2,6 @@ import config
 import glob
 from component import Component
 import time
-import balls
 
 
 representation = [
@@ -14,17 +13,7 @@ representation = [
         ]
 
 
-def handle_ball_ufo_collision(ball):
-    """
-    For any given ball, determine if ball collides with any brick
-    :param ball:
-    :return:
-    """
-    if glob.boss.get_x() - 1 <= ball.get_x() <= glob.boss.get_x() + glob.boss.get_width() and \
-            glob.boss.get_y() - 1 <= ball.get_y() <= glob.boss.get_y() + glob.boss.get_height():
-        if balls.bounce_ball(glob.boss, ball):
-            glob.boss.lose_health()
-    glob.bricks = list(filter(lambda b: b.get_health(), glob.bricks))
+
 
 
 class Boss(Component):
@@ -58,3 +47,5 @@ class Boss(Component):
 
     def lose_health(self):
         self._health -= 1
+
+        if self._health <= 

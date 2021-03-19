@@ -11,7 +11,6 @@ glob.init()
 start_time = time.time()
 max_points = 0
 
-glob.spawn_powerup(10, 15)
 while True and glob.player.get_lives():
     # Move paddle
     user_action.make_move()
@@ -60,7 +59,17 @@ while True and glob.player.get_lives():
         print()
     else:
         print('Time left:', int(config.shooting_duration - (time.time() - glob.paddle.get_shooting_start())))
+    if glob.boss:
+        print("Boss HP", glob.boss.get_health(), end=' ')
+        print("▇"*glob.boss.get_health())
+    else:
+        print()
+
     glob.board.render()
+
+    if glob.level == 3 and glob.boss.get_health() <= 0:
+        glob.player.set_points(glob.player.get_points() + 100)
+        break
 
     if not len(list(filter(lambda b: b.get_brick_type() != -1, glob.bricks))):
         if glob.level == 3:
