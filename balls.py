@@ -99,6 +99,15 @@ def handle_ball_brick_collision(ball):
     glob.bricks = list(filter(lambda b: b.get_health(), glob.bricks))
 
 
+def handle_ball_defence_collision(ball):
+    for brick in glob.boss_bricks:
+        if brick.get_x() - 1 <= ball.get_x() <= brick.get_x() + brick.get_width() and \
+                brick.get_y() - 1 <= ball.get_y() <= brick.get_y() + brick.get_height():
+            if bounce_ball(brick, ball):
+                break
+    glob.boss_bricks = list(filter(lambda b: b.get_health(), glob.boss_bricks))
+
+
 def handle_ball_ufo_collision(ball):
     """
     For any given ball, determine if ball collides with any brick
@@ -139,7 +148,9 @@ class Balls:
             if ball.is_free and time.time() - pbt >= ball.get_speed():
                 flag = True
                 handle_ball_brick_collision(ball)
-                handle_ball_ufo_collision(ball)
+                if glob.boss:
+                    handle_ball_defence_collision(ball)
+                    handle_ball_ufo_collision(ball)
                 ball.move_relative(glob.board.matrix, ball.get_xvel(), ball.get_yvel())
                 ret = ball.handle_paddle_collision(glob.paddle)
                 if not ret:

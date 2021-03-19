@@ -1,4 +1,5 @@
 from input import input_to, Get
+import os
 import glob
 
 
@@ -16,6 +17,11 @@ def make_move():
 
     if c == 'y':
         glob.level += 1
+        if glob.level == 4:
+            os.system('clear')
+            print('Game over')
+            print('Max score is ', glob.max_points)
+            quit()
         glob.init()
 
     if c == 'q':

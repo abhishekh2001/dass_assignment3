@@ -11,7 +11,7 @@ glob.init()
 start_time = time.time()
 max_points = 0
 
-while True and glob.player.get_lives():
+while glob.player.get_lives() and glob.level <= 3:
     # Move paddle
     user_action.make_move()
 
@@ -23,7 +23,8 @@ while True and glob.player.get_lives():
     glob.lasers.move_all()
     prev_powerup_timestamp = move_powerups(prev_powerup_timestamp)
     glob.paddle.shoot()
-    glob.boss.move_with_paddle()
+    if glob.boss:
+        glob.boss.move_with_paddle()
     deactivate_powerups()
 
     for brick in glob.bricks:
@@ -34,6 +35,8 @@ while True and glob.player.get_lives():
     glob.balls.render_all(board.matrix)
     glob.lasers.render_all(board.matrix)
     for brick in glob.bricks:
+        brick.render(board.matrix)
+    for brick in glob.boss_bricks:
         brick.render(board.matrix)
     for powerup in glob.powerups:
         powerup.render(board.matrix)
@@ -72,14 +75,14 @@ while True and glob.player.get_lives():
         break
 
     if not len(list(filter(lambda b: b.get_brick_type() != -1, glob.bricks))):
-        if glob.level == 3:
-            break
-        glob.level += 1
-        glob.init()
+        if glob.level < 3:
+            glob.level += 1
+            glob.init()
 
-    if len(glob.bricks) and max(list(map(lambda x: x.get_y(), glob.bricks))) >= config.board_height - 2:
+    if glob.level < 3 and (len(glob.bricks) and max(list(map(lambda x: x.get_y(), glob.bricks))) >= config.board_height - 2):
+        print('quitting here')
         break
 
-os.system('clear')
+# os.system('clear')
 print('Game over')
 print('Max score is ', glob.max_points)

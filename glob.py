@@ -17,6 +17,7 @@ from bomb import Bomb
 player = Player()
 max_points = 0
 
+can_spawn_powerups = True
 board = Board()
 paddle = None
 balls = Balls()
@@ -25,9 +26,8 @@ powerups = []
 to_activate_powerups = []
 active_powerups = []
 bricks = []
+boss_bricks = []
 level = 1
-
-level = 3
 
 
 boss = None
@@ -66,6 +66,7 @@ def init():
     global paddle
     global bricks
     global powerups
+    global can_spawn_powerups
     global active_powerups
     global to_activate_powerups
     global balls
@@ -76,6 +77,7 @@ def init():
     global bricks_fall
     global gravity_timestamp
     global boss
+    global boss_bricks
 
     clear_screen()
     balls.remove_all()
@@ -114,8 +116,17 @@ def init():
         bricks.append(Brick(45, 13, 2, ['BBBB']))
 
     if level == 3:
-        boss = Boss(paddle.get_x(), 1   )
-        bricks.append(Brick(45, 13, 3, ['BBBB']))
+        for y, j in zip(range(8, 17, 2), range(10, 50, 11)):
+            bricks.append(Brick(j, y, -1, ['BBBB']))
+        for y, j in zip(range(14, 7, -2), range(60, 110, 11)):
+            bricks.append(Brick(j, y, -1, ['BBBB']))
+
+        can_spawn_powerups = False
+        boss = Boss(paddle.get_x(), 0)
+        
+        for b in boss_bricks:
+            b.clear(board.matrix)
+        boss_bricks = []
 
     prev_ball_timestamp = time.time()  # Improve
     prev_powerup_timestamp = time.time()
@@ -131,6 +142,7 @@ def start_new_life():
     global to_activate_powerups
     global active_powerups
     global paddle
+    global boss_bricks
     clear_screen()
 
     balls.remove_all()
@@ -144,9 +156,13 @@ def start_new_life():
     to_activate_powerups = []
     active_powerups = []
 
+    for b in boss_bricks:
+        b.clear(board.matrix)
+    boss_bricks = []
+
 
 def spawn_powerup(x, y):
-    if random.random() <= config.prob_powerup:
+    if  can_spawn_powerups and random.random() <= config.prob_powerup:
         p_type = random.choice([1, 2, 3, 4, 5, 6])
         p_type = 7
         xvel, yvel = 1, -1
