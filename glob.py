@@ -161,11 +161,9 @@ def start_new_life():
     boss_bricks = []
 
 
-def spawn_powerup(x, y):
+def spawn_powerup(x, y, xvel, yvel):
     if  can_spawn_powerups and random.random() <= config.prob_powerup:
-        p_type = random.choice([1, 2, 3, 4, 5, 6])
-        p_type = 7
-        xvel, yvel = 1, -1
+        p_type = random.choice([1, 2, 3, 4, 5, 6, 7])
         if p_type == 1:
             powerups.append(ExpandPaddle(x, y, xvel, yvel))
         elif p_type == 2:
@@ -211,7 +209,7 @@ def is_thru_ball():
     return 5 in map(lambda x: x.get_type(), active_powerups)
 
 
-def handle_impact(brick):
+def handle_impact(brick, xvel, yvel):
     """
     Behavior of brick on successful impact with ball
     :param brick: brick instance
@@ -222,10 +220,10 @@ def handle_impact(brick):
         brick.chain_explosions()
     elif is_thru_ball():  # if thru-ball is active, destroy brick
         brick.destroy(board.matrix)
-        spawn_powerup(brick.get_x(), brick.get_y())
+        spawn_powerup(brick.get_x(), brick.get_y(), xvel, yvel)
         player.increment_points_by(brick.get_score())  # increase points
     elif brick.got_hit(board.matrix):  # Brick has zero health -> is destroyed
-        spawn_powerup(brick.get_x(), brick.get_y())
+        spawn_powerup(brick.get_x(), brick.get_y(), xvel, yvel)
         player.increment_points_by(brick.get_score())  # increase player points
 
 
@@ -244,9 +242,13 @@ def move_powerups(ppt):
             if powerup.is_caught_by_paddle(paddle):  # Check if powerup is caught
                 to_activate_powerups.append(powerup)  # temporarily store powerups to activate
                 powerup.set_status(config.powerup_status['ACTIVE'])  # Update status of caught powerup
-            # powerup.move_relative(board.matrix, powerup.get_xvel(), powerup.get_yvel())
-            # board.matrix[0][0] = str(powerup.get_yvel())
-            if powerup.go_down(board.matrix):  # ** checks if powerup hit the board **
+            
+            if time.time() - powerup.get_last_moved_timestamp() < 2:
+                powerup.move_relative(board.matrix, powerup.get_xvel(), powerup.get_yvel())
+            else:
+                powerup.go_down(board.matrix)  # ** checks if powerup hit the board **
+                    
+            if powerup.get_y() >= config.paddle_row_restriction:
                 powerup.set_status(config.powerup_status['MISSED'])  # User has missed the powerup
     if flag:
         ppt = time.time()

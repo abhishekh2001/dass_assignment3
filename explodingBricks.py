@@ -1,5 +1,6 @@
 from brick import Brick
 import glob
+import numpy as np
 
 
 class ExplodingBrick(Brick):
@@ -21,6 +22,6 @@ class ExplodingBrick(Brick):
                 glob.player.increment_points_by(brick.get_score())
                 brick.chain_explosions()
             if brick.get_brick_type() != 4 and brick.get_health():
-                glob.spawn_powerup(brick.get_x(), brick.get_y())
+                glob.spawn_powerup(brick.get_x(), brick.get_y(), np.random.choice([1, 0, -1]), np.random.choice([1, -1]))
                 glob.player.increment_points_by(brick.get_score())
             brick.destroy(glob.board.matrix)

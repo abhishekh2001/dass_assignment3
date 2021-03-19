@@ -72,6 +72,7 @@ while glob.player.get_lives() and glob.level <= 3:
 
     if glob.level == 3 and glob.boss.get_health() <= 0:
         glob.player.set_points(glob.player.get_points() + 100)
+        glob.max_points = max(glob.player.get_points() + 100, glob.max_points)
         break
 
     if not len(list(filter(lambda b: b.get_brick_type() != -1, glob.bricks))):
